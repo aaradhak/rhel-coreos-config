@@ -181,15 +181,6 @@ postprocess:
     echo '# RHCOS-only: we follow the Fedora/upstream default' >> /usr/lib/systemd/system/basic.target
     echo 'Wants=tmp.mount' >> /usr/lib/systemd/system/basic.target
 
-  - |
-    #!/usr/bin/env bash
-    set -xeo pipefail
-    # See https://issues.redhat.com/browse/LOG-3117
-    # Something changed between rhel8 and rhel9 to not generate this by default
-    # but we have containers that expect it to be mounted so for now let's continue
-    # generating it.
-    ln -sr /usr/share/zoneinfo/UTC /etc/localtime
-
   # sudo prefers its config files to be mode 440, and some security scanners
   # complain if /etc/sudoers.d files are world-readable.
   # https://bugzilla.redhat.com/show_bug.cgi?id=1981979
@@ -300,8 +291,6 @@ packages:
  # https://bugzilla.redhat.com/show_bug.cgi?id=1877905
  # https://bugzilla.redhat.com/show_bug.cgi?id=1886201
  - perl-interpreter
- # Upstream PR https://github.com/coreos/fedora-coreos-config/pull/786
- - WALinuxAgent-udev
  # Provide fips-mode-setup which is needed by rhcos-fips.sh
  - crypto-policies-scripts
  # For semanage
@@ -323,6 +312,9 @@ packages-x86_64:
   - ostree-grub2
   # rdma-core cleanly covers some key bare metal use cases
   - rdma-core
+  # Upstream PR https://github.com/coreos/fedora-coreos-config/pull/786
+  # This package is only available on x86_64 and aarch64: https://issues.redhat.com/browse/ENGCMP-5941
+  - WALinuxAgent-udev
 
 packages-ppc64le:
   - irqbalance
@@ -333,6 +325,9 @@ packages-ppc64le:
 
 packages-aarch64:
   - irqbalance
+  # Upstream PR https://github.com/coreos/fedora-coreos-config/pull/786
+  # This package is only available on x86_64 and aarch64: https://issues.redhat.com/browse/ENGCMP-5941
+  - WALinuxAgent-udev
 
 packages-s390x:
   # Required genprotimg for IBM Secure Execution
