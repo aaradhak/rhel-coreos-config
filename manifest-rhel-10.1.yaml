@@ -29,4 +29,5 @@ mutate-os-release: "10.1"
 packages:
  # We include the generic release package and tweak the os-release info in a
  # post-process script
+ - azure-vm-utils
  - redhat-release
